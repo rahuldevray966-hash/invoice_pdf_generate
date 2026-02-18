@@ -1,17 +1,24 @@
 name: invoice_pdf_generate
-description: A new Flutter project.
+description: Invoice PDF Generator (Web + Mobile)
 publish_to: 'none'
-version: 0.1.0
+version: 0.1.0+1
 
 environment:
-  sdk: '>=3.1.2 <4.0.0'
+  sdk: ">=3.1.2 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  open_file: ^3.3.2
+
+  # PDF generation
+  pdf: ^3.11.0
+
+  # Mobile file handling
   path_provider: ^2.1.1
-  pdf: ^3.10.4
+  open_file: ^3.3.2
+
+  # Optional (if using icons)
+  cupertino_icons: ^1.0.6
 
 dev_dependencies:
   flutter_test:
@@ -20,5 +27,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
   assets:
     - assets/
+

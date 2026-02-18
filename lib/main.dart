@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
-import 'file_handle_api.dart';
-import 'pdf_invoice_api.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'pdf_invoice_api.dart';
+import 'file_handle_api.dart';
 
 void main() {
   runApp(const MainApp());
@@ -21,7 +21,7 @@ class MainApp extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -41,56 +41,59 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            DropdownButtonFormField(
+            DropdownButtonFormField<PdfColor>(
               decoration: const InputDecoration(
                 hintText: 'Select Theme color',
               ),
-              items: [
+              items: const [
                 DropdownMenuItem(
-                  child: Text('Black'),
                   value: PdfColors.black,
+                  child: Text('Black'),
                 ),
                 DropdownMenuItem(
-                  child: Text('Dark Grey'),
                   value: PdfColors.grey900,
+                  child: Text('Dark Grey'),
                 ),
                 DropdownMenuItem(
-                  child: Text('Green'),
                   value: PdfColors.green,
+                  child: Text('Green'),
                 ),
                 DropdownMenuItem(
-                  child: Text('Blue'),
                   value: PdfColors.blue,
+                  child: Text('Blue'),
                 ),
               ],
               onChanged: (value) {
-                setState(() {
-                  themeColor = value as PdfColor;
-                });
+                if (value != null) {
+                  setState(() {
+                    themeColor = value;
+                  });
+                }
               },
             ),
 
-            // Choose Font
-            DropdownButtonFormField(
+            const SizedBox(height: 20),
+
+            DropdownButtonFormField<pw.Font Function()>(
               decoration: const InputDecoration(
                 hintText: 'Select Font',
               ),
               items: const [
                 DropdownMenuItem(
-                  child: Text('Courier'),
                   value: pw.Font.courier,
+                  child: Text('Courier'),
                 ),
                 DropdownMenuItem(
-                  child: Text('Helvetica'),
                   value: pw.Font.helvetica,
+                  child: Text('Helvetica'),
                 ),
                 DropdownMenuItem(
-                  child: Text('Times'),
                   value: pw.Font.times,
+                  child: Text('Times'),
                 ),
                 DropdownMenuItem(
-                  child: Text('ZapfDingbats'),
                   value: pw.Font.zapfDingbats,
+                  child: Text('ZapfDingbats'),
                 ),
               ],
               onChanged: (value) {
@@ -101,16 +104,15 @@ class _HomePageState extends State<HomePage> {
                 }
               },
             ),
+
+            const SizedBox(height: 30),
+
             ElevatedButton(
               onPressed: () async {
-                // generate pdf file
-                final pdfFile = await PdfInvoiceApi.generate(
-                  themeColor,
-                  pw.Font.courier(),
-                );
+                final pdfBytes =
+                    await PdfInvoiceApi.generate(themeColor, font);
 
-                // opening the pdf file
-                FileHandleApi.openFile(pdfFile);
+                await saveAndOpenFile(pdfBytes, "invoice.pdf");
               },
               child: const Text('Generate Invoice'),
             ),
@@ -120,3 +122,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
